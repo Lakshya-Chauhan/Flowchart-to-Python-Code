@@ -5,8 +5,14 @@ def text_to_code(text: str, type: str):
             if text.find('print') == 0:
                 file.write(f"{text[:5]}({toString(*splitString(text[6:]))})")
             elif text.find('input') == 0:
-                command, var = text.split()
-                file.write(f"{var} = input()")
+                command, data_type, var = text.split()
+                file.write(f"{var} = {data_type[1:-1]}(input())")
+
+        case 'r':
+            file.write(text)
+            
+        case 'd':
+            pass
     file.write("\n")
                 
 def toString(*args: str):
@@ -47,5 +53,7 @@ def splitString(string: str):
     return l
 
 # "Hello there" name
-text_to_code('input name', 'p')
-text_to_code('print "Hello there" name "! How are you?"', 'p')
+text_to_code('input (str) name', 'p')
+text_to_code('input (int) age', 'p')
+text_to_code('age = age + 1', 'r')
+text_to_code('print "Hello there" name "! Next year you\'ll be turning " age ":)"', 'p')
