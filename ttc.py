@@ -2,17 +2,23 @@ def text_to_code(text: str, type: str):
     file = open("program.py", 'a')
     match (type):
         case 'p':
-            if text.find('print') == 0:
-                file.write(f"{text[:5]}({toString(*splitString(text[6:]))})")
-            elif text.find('input') == 0:
-                command, data_type, var = text.split()
-                file.write(f"{var} = {data_type[1:-1]}(input())")
+            if (i := text.find('print')) != -1:
+                file.write(f"{text[:i+5]}({toString(*splitString(text[i+6:]))})")
+            elif (i := text.find('input')) != -1:
+                command, data_type, var = text.split(' ')
+                file.write(f"{command[:i]+var} = {data_type[1:-1]}(input())")
 
         case 'r':
             file.write(text)
             
         case 'd':
-            pass
+            if text.find('if') == 0:
+                file.write(f"{text}:")
+            elif text.find('else if') == 0:
+                file.write(f"elif {text[8:]}:")
+            elif text.find('else') == 0:
+                file.write(f"else:")
+
     file.write("\n")
                 
 def toString(*args: str):
@@ -57,3 +63,7 @@ text_to_code('input (str) name', 'p')
 text_to_code('input (int) age', 'p')
 text_to_code('age = age + 1', 'r')
 text_to_code('print "Hello there" name "! Next year you\'ll be turning " age ":)"', 'p')
+text_to_code('if age < 18', 'd')
+text_to_code('\tprint "Yet you would be too young to drive :(..Next time!"', 'p')
+text_to_code('else', 'd')
+text_to_code('\tprint "Then you\'ll be able to drive! :)"', 'p')
